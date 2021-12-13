@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.dev.mhc.agendei.dto.UserDTO;
 import br.dev.mhc.agendei.dto.UserNewDTO;
 import br.dev.mhc.agendei.entities.User;
+import br.dev.mhc.agendei.services.AuthService;
 import br.dev.mhc.agendei.services.UserService;
 
 @RestController
@@ -40,6 +41,7 @@ public class UserResource {
 	@PutMapping(value = "/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void update(@RequestBody UserDTO objDTO, @PathVariable Long id) {
+		AuthService.validatesUserAuthorization(id);
 		User obj = service.fromDTO(objDTO);
 		obj.setId(id);
 		service.update(obj);
@@ -60,10 +62,11 @@ public class UserResource {
 		return userList.stream().map(x -> service.toDTO(x)).collect(Collectors.toList());
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('BASIC_USER')")
 	@GetMapping(value = "/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public UserDTO findById(@PathVariable Long id) {
+		AuthService.validatesUserAuthorization(id);
 		User obj = service.findById(id);
 		return service.toDTO(obj);
 	}
@@ -72,6 +75,7 @@ public class UserResource {
 	@PatchMapping(value = "/{id}/set-password")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void setPassword(@RequestBody UserNewDTO objDTO, @PathVariable Long id) {
+		AuthService.validatesUserAuthorization(id);
 		User user = service.fromDTO(objDTO);
 		user.setId(id);
 		service.updatePassword(user);

@@ -19,7 +19,7 @@ public class UserService implements CrudInterface<User, Long> {
 
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder pe;
 
@@ -58,7 +58,7 @@ public class UserService implements CrudInterface<User, Long> {
 		newObj.setUsername(obj.getUsername());
 		newObj.setPassword(obj.getPassword());
 	}
-	
+
 	public User updatePassword(User user) {
 		User newObj = findById(user.getId());
 		newObj.setPassword(pe.encode(user.getPassword()));
@@ -69,11 +69,11 @@ public class UserService implements CrudInterface<User, Long> {
 		User user = new User(objDTO.getId(), objDTO.getUsername(), null, objDTO.isActive());
 		return user;
 	}
-	
+
 	public User fromDTO(UserNewDTO objDTO) {
 		return new User(null, objDTO.getUsername(), pe.encode(objDTO.getPassword()), true);
 	}
-	
+
 	public UserDTO toDTO(User user) {
 		return new UserDTO(user.getId(), user.getUsername(), user.isActive(), user.getProfiles());
 	}
