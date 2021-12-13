@@ -23,7 +23,7 @@ public class DBService {
 	public void databaseSeeding() throws ParseException {
 		
 		User user1 = new User(null, "admin@mhc.dev.br", pe.encode("teste"), true);
-		User user2 = new User(null, "teste@mhc.com.br", pe.encode("teste"), true);
+		User user2 = new User(null, "teste@mhc.dev.br", pe.encode("teste"), true);
 		
 		user1.addProfile(Profile.ADMIN);
 		
