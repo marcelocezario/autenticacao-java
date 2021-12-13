@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.dev.mhc.agendei.entities.User;
@@ -16,10 +17,13 @@ public class DBService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder pe;
+	
 	public void databaseSeeding() throws ParseException {
 		
-		User user1 = new User(null, "admin@mhc.dev.br", "teste", true);
-		User user2 = new User(null, "teste@teste.com.br", "teste", true);
+		User user1 = new User(null, "admin@mhc.dev.br", pe.encode("teste"), true);
+		User user2 = new User(null, "teste@teste.com.br", pe.encode("teste"), true);
 		
 		user1.addProfile(Profile.ADMIN);
 		

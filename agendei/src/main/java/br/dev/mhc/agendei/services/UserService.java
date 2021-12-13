@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.dev.mhc.agendei.dto.UserDTO;
@@ -18,6 +19,9 @@ public class UserService implements CrudInterface<User, Long> {
 
 	@Autowired
 	private UserRepository repository;
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 
 	@Override
 	public User insert(User obj) {
@@ -57,7 +61,7 @@ public class UserService implements CrudInterface<User, Long> {
 	
 	public User updatePassword(User user) {
 		User newObj = findById(user.getId());
-		newObj.setPassword(user.getPassword());
+		newObj.setPassword(pe.encode(user.getPassword()));
 		return repository.save(newObj);
 	}
 
@@ -67,7 +71,7 @@ public class UserService implements CrudInterface<User, Long> {
 	}
 	
 	public User fromDTO(UserNewDTO objDTO) {
-		return new User(null, objDTO.getUsername(), objDTO.getPassword(), true);
+		return new User(null, objDTO.getUsername(), pe.encode(objDTO.getPassword()), true);
 	}
 	
 	public UserDTO toDTO(User user) {
